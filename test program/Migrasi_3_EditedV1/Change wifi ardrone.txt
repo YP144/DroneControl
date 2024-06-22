@@ -1,0 +1,10 @@
+#telnet into the drone (telnet 192.168.1.1)
+#paste the following command:
+
+killall udhcpd; iwconfig ath0 mode managed essid ardrone_serve key s:12345678; ifconfig ath0 192.168.1.100 netmask 255.255.255.0 up;route add default gw 192.168.0.100
+
+#ex. killall udhcpd; iwconfig ath0 mode managed essid Roflcopter; ifconfig ath0 192.168.43.201 netmask 255.255.255.0 up;
+
+# create hotspot
+netsh wlan set hostednetwork mode=allow ssid=ardrone_serve key=
+

@@ -1,0 +1,170 @@
+pygame 2.1.0 (SDL 2.0.16, Python 3.9.6)
+Hello from the pygame community. https://www.pygame.org/contribute.html
+connecting...
+Exception in thread Thread-281:
+Traceback (most recent call last):
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 973, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 910, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 214, in background_process
+    ar_drone_process(ardrones, drones)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 301, in ar_drone_process
+    drones[0].ar_drone_sync(ar_drone_cust)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Drone.py", line 883, in ar_drone_sync
+    self.ar_drone_vx*100, self.ar_drone_vy*100)
+TypeError: unsupported operand type(s) for *: 'NoneType' and 'int'
+Exception in thread Thread-941:
+Traceback (most recent call last):
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 973, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 910, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 214, in background_process
+    ar_drone_process(ardrones, drones)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 294, in ar_drone_process
+    ar_drone_cust.get_navdata()
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\CustARDrone.py", line 56, in get_navdata
+    self.navdemo = self.drone.navdata.demo
+AttributeError: 'NavData' object has no attribute 'demo'
+Exception in thread Thread-1007:
+Traceback (most recent call last):
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 973, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 910, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 214, in background_process
+    ar_drone_process(ardrones, drones)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 294, in ar_drone_process
+    ar_drone_cust.get_navdata()
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\CustARDrone.py", line 56, in get_navdata
+    self.navdemo = self.drone.navdata.demo
+AttributeError: 'NavData' object has no attribute 'demo'
+takeoff
+takeoff
+takeoff
+takeoff
+0
+107
+221
+304
+397
+508
+0
+98
+185
+297
+378
+491
+585
+0
+99
+198
+289
+399
+497
+590
+0
+116
+203
+308
+396
+501
+0
+106
+202
+307
+392
+506
+0
+83
+169
+7988
+0
+99
+192
+279
+392
+481
+600
+0
+81
+181
+282
+8912
+0
+106
+192
+289
+396
+477
+589
+0
+2152
+0
+95
+200
+296
+408
+515
+0
+98
+194
+0
+0
+Exception in thread Thread-3260:
+Traceback (most recent call last):
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 973, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 910, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 271, in background_process
+    algorithm(drones, boids, lead_foll)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 397, in algorithm
+    boids.run()
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Boid.py", line 16, in run
+    self.separation(100)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Boid.py", line 50, in separation
+    avr_pos_relative = tuple(avr_pos - drone.est_pos)
+TypeError: unsupported operand type(s) for -: 'tuple' and 'tuple'
+206
+209
+Exception in thread Thread-3266:
+Traceback (most recent call last):
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 973, in _bootstrap_inner
+    self.run()
+  File "C:\Users\Giga\.pyenv\pyenv-win\versions\3.9.6\lib\threading.py", line 910, in run
+    self._target(*self._args, **self._kwargs)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 271, in background_process
+    algorithm(drones, boids, lead_foll)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Main.py", line 397, in algorithm
+    boids.run()
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Boid.py", line 16, in run
+    self.separation(100)
+  File "D:\File\Belajar\Kuliah S2 ITB\Tesis\Program\Belajar\Main Program\Program Python\Test\Migrasi 2\Boid.py", line 50, in separation
+    avr_pos_relative = tuple(avr_pos - drone.est_pos)
+TypeError: unsupported operand type(s) for -: 'tuple' and 'tuple'
+398
+405
+500
+501
+landing
+landing
+landing
+landing
+landing
+landing
+landing
+takeoff
+takeoff
+takeoff
+takeoff
+[NULL @ 000002bd5cc92300] sps_id 32 out of range
+landing
+landing
+landing
+landing
+landing
+landing
+landing
+done
