@@ -43,6 +43,14 @@ ylabel('Position (y)');
 title('PID Control Simulation');
 
 %% 
+% Impor gambar drone
+drone_icon = imread("drone.png");
+
+% Tentukan skala ukuran gambar (sesuaikan dengan ukuran yang diinginkan)
+icon_size = 100; % Ukuran gambar dalam pixel
+imshow(drone_icon);
+
+%% 
 
 % Contoh data posisi x dan waktu t
 x = [0 0.2 0.5 0.8 1.2 1.5 1.7 1.9 2.1];
@@ -67,50 +75,46 @@ end
 
 %% 
 
-t1 = 0:0.01:3;
-t2 = (3+0.01):0.01:4;
+t1 = 0:0.01:2;
+t2 = (2+0.01):0.01:4;
 t3 = (4+0.01):0.01:6;
-t4 = (6+0.01):0.01:7;
+t4 = (6+0.01):0.01:8;
 t = [t1,t2,t3,t4];
 u1 =[];
 for i = 1:length(t1)
-    u1 = [u1,0.1];
+    u1 = [u1,0.05];
 end
 u2 =[];
 for i = 1:length(t2)
-    u2 = [u2,0];
+    u2 = [u2,0.1];
 end
 u3 =[];
 for i = 1:length(t3)
-    u3 = [u3,0.2];
+    u3 = [u3,0.15];
 end
 u4 =[];
 for i = 1:length(t4)
-    u4 = [u4,0];
+    u4 = [u4,0.2];
 end
 u = [u1,u2,u3,u4];
-figure();
+figure(1);
 plot(t,u);
 grid on;
 hold on;
 
-y0 = 100;
+y0 = 450;
 tfl = 0;
-y=[y0,y0];
+y=[y0];
 umin1 = 0;
-x = [];
-for i = 1:length(t)
-    if u(i) == 0 && umin1 == 0
-        y = [y,y0+0];
-    elseif u(i) ~= 0 && umin1 == 0
+x = [200];
+for i = 2:length(t)
+
+    if (u(i) ~= umin1)
         tfl = t(i);
         y0 = y(end);
-        % y = [y,y0+sistemX("maju", 0.1, t(i)-tfl)];
-    elseif u(i) ~= 0 && umin1 ~= 0
-        y = [y,y0+sistemX("maju", u(i), t(i)-tfl)];
-    elseif u(i) == 0 && umin1 ~= 0
-        y0 = y(end);
-        y = [y,y0+0];
+        y = [y,y0];
+    elseif (u(i) == umin1)
+        y = [y,y0+sistemX("mundur", u(i), t(i)-tfl)];
     end
     umin1 = u(i);
     x = [x,200];
@@ -118,19 +122,29 @@ end
 
 plot(t,y);
 
-figure();
+% Impor gambar drone
+[drone_icon, ~, alpha] = imread('quadrotor.png');
+
+% Tentukan skala ukuran gambar (sesuaikan dengan ukuran yang diinginkan)
+icon_size = 60; % Ukuran gambar dalam pixel
+
+figure(2);
 
 xlabel('Time');
 ylabel('Position (x)');
-title('Robot Movement Animation');
 
 % Loop untuk animasi
 for i = 1:length(t)
+    figure(2);
     plot(x(1:i), y(1:i), 'b', 'LineWidth', 2); % Plot data yang sudah diperbarui
     axis([0 400 0 500]); % Sesuaikan batas sumbu x dan y sesuai kebutuhan
     grid on;
     hold on;
-    plot(x(i), y(i), 'ro', 'MarkerSize', 10); % Plot titik posisi saat ini sebagai lingkaran merah
+    % plot(x(i), y(i), 'ro', 'MarkerSize', 10); % Plot titik posisi saat ini sebagai lingkaran merah
+    % Tampilkan gambar drone sebagai simbol titik posisi saat ini
+    h = image(x(i), y(i), drone_icon, 'XData', [x(i)-icon_size/2 x(i)+icon_size/2], 'YData', [y(i)-icon_size/2 y(i)+icon_size/2]);
+    % Atur AlphaData untuk menetapkan transparansi
+    set(h, 'AlphaData', alpha);
     hold off;
     pause(0.01); % Jeda antara setiap frame animasi
 end
@@ -138,9 +152,11 @@ end
 % Definisi fungsi dalam script
 function y = sistemX(arah, kec, t)
     if arah == "maju"
-        y = 0;
-        outsim = 0;
-        gainMaju = 937.34 * kec + 0.8953;
+        if kec ~= 0
+            gainMaju = 937.34 * kec + 0.8953;
+        elseif kec == 0
+            gainMaju = 0;
+        end
         tauMaju = 1.2396;
         s = tf('s'); % Definisikan operator Laplace
         Gmaju = gainMaju / (tauMaju * s + 1); % Fungsi transfer sistem
@@ -152,7 +168,12 @@ function y = sistemX(arah, kec, t)
         y = outsim(end);
 
     elseif arah == "mundur"
-        gainMundur = -1*(1242.79 * kec - 4.531);
+        if kec ~= 0
+            gainMundur = -1*(1242.79 * kec - 4.531);
+        elseif kec == 0
+            gainMundur = 0;
+        end
+        
         tauMundur = 1.949;
         s = tf('s'); % Definisikan operator Laplace
         Gmundur = gainMundur / (tauMundur * s + 1); % Fungsi transfer sistem

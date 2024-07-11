@@ -1,6 +1,6 @@
 % 
 % Definisikan Parameter Sistem
-kec = 0.1;
+kec = 0;
 K = -1*(1242.79 * kec - 4.531);
 tau = 1.949;
 A = 1; % Kemiringan sinyal ramp
