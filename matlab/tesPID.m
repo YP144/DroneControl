@@ -5,20 +5,21 @@
 % tz = 10;
 % t = 0:0.01:tz; % Rentang waktu simulasi
 % kec = 0.1;
-% y = sistemX("maju",0.1,2);
+% y = sistemX("maju",0.1,0.01);
 % disp(y)
 
 initialY = 200;
 setPointY = 450;
 
 % Waktu simulasi
+tz = 10;
 dt = 0.01;  % Interval waktu
-t = 0:dt:10;
+t = 0:dt:tz;
 
 % Parameter PID
-Kp = 100;   % Gain proporsional
-Ki = 1;   % Gain integral
-Kd = 0.5; % Gain derivatif
+Kp = 5;   % Gain proporsional
+Ki = 0;   % Gain integral
+Kd = 1; % Gain derivatif
 
 % Inisialisasi variabel
 n = length(t);
@@ -30,19 +31,18 @@ tfl = 0;
 y=[initialY];
 umin1 = 0;
 x = [200];
+sp = [setPointY];
 
 % % Simulasi loop
 for i = 2:length(t)
-    if (u(i) ~= umin1)
-        tfl = t(i);
-        initialY = y(end);
-        y = [y,initialY];
-    elseif (u(i) == umin1)
-        y = [y,initialY+sistemX("mundur", u(i), t(i)-tfl)];
-    end
-    
     % Hitung error
-    e(i) = setPointY - y(end);
+    error = setPointY - y(end);
+    toleransi = 5;
+    if error < toleransi && error >-toleransi
+        e(i) = 0;
+    else
+        e(i) = error;
+    end
 
     % Hitung bagian integral
     integral = integral + e(i) * dt;
@@ -52,14 +52,36 @@ for i = 2:length(t)
 
     % Hitung sinyal kontrol PID
     u(i) = Kp * e(i) + Ki * integral + Kd * derivative;
+    if u(i) > 0.25
+        u(i) = 0.25;
+    elseif u(i) < -0.25
+        u(i) = -0.25;
+    end
+    % update y sekarang
+    if u(i) > 0
+        arah = "maju";
+    elseif u(i) < 0
+        arah = "mundur";
+    end
+
+    if (u(i) ~= umin1)
+        tfl = t(i-1);
+        initialY = y(end);
+        y = [y,initialY+sistemX(arah, u(i), t(i)-tfl)];
+    elseif (u(i) == umin1)
+        y = [y,initialY+sistemX(arah, u(i), t(i)-tfl)];
+    end
 
     umin1 = u(i);
     x = [x,200];
+    sp = [sp, setPointY];
     % Simpan error sebelumnya
     previous_error = e(i);
 end
 
 plot(t,y);
+hold on
+plot(t,sp)
 
 % Impor gambar drone
 [drone_icon, ~, alpha] = imread('quadrotor.png');
