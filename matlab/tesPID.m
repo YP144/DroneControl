@@ -5,10 +5,10 @@
 % tz = 10;
 % t = 0:0.01:tz; % Rentang waktu simulasi
 % kec = 0.1;
-% y = sistemX("maju",0.1,0.01);
+% y = sistemX("mundur",0.25,0.01);
 % disp(y)
 
-initialY = 200;
+initialY = 100;
 setPointY = 450;
 
 % Waktu simulasi
@@ -17,11 +17,12 @@ dt = 0.01;  % Interval waktu
 t = 0:dt:tz;
 
 % Parameter PID
-Kp = 5;   % Gain proporsional
+Kp = 10;   % Gain proporsional
 Ki = 0;   % Gain integral
 Kd = 1; % Gain derivatif
 
 % Inisialisasi variabel
+animasi = false;
 n = length(t);
 u = zeros(1, n);   % Sinyal kontrol
 e = zeros(1, n);   % Error
@@ -37,7 +38,7 @@ sp = [setPointY];
 for i = 2:length(t)
     % Hitung error
     error = setPointY - y(end);
-    toleransi = 5;
+    toleransi = 1;
     if error < toleransi && error >-toleransi
         e(i) = 0;
     else
@@ -67,9 +68,11 @@ for i = 2:length(t)
     if (u(i) ~= umin1)
         tfl = t(i-1);
         initialY = y(end);
-        y = [y,initialY+sistemX(arah, u(i), t(i)-tfl)];
+        ynew = sistemX(arah, u(i), t(i)-tfl);
+        y = [y,initialY+ynew];
     elseif (u(i) == umin1)
-        y = [y,initialY+sistemX(arah, u(i), t(i)-tfl)];
+        ynew = sistemX(arah, u(i), t(i)-tfl);
+        y = [y,initialY+ynew];
     end
 
     umin1 = u(i);
@@ -80,38 +83,42 @@ for i = 2:length(t)
 end
 
 plot(t,y);
-hold on
-plot(t,sp)
+hold on;
+plot(t,sp);
 
-% Impor gambar drone
-[drone_icon, ~, alpha] = imread('quadrotor.png');
+if animasi == true
 
-% Tentukan skala ukuran gambar (sesuaikan dengan ukuran yang diinginkan)
-icon_size = 60; % Ukuran gambar dalam pixel
+    % Impor gambar drone
+    [drone_icon, ~, alpha] = imread('quadrotor.png');
 
-figure(2);
+    % Tentukan skala ukuran gambar (sesuaikan dengan ukuran yang diinginkan)
+    icon_size = 60; % Ukuran gambar dalam pixel
 
-xlabel('Time');
-ylabel('Position (x)');
-
-% Loop untuk animasi
-for i = 1:length(t)
     figure(2);
-    plot(x(1:i), y(1:i), 'b', 'LineWidth', 2); % Plot data yang sudah diperbarui
-    axis([0 400 0 500]); % Sesuaikan batas sumbu x dan y sesuai kebutuhan
-    grid on;
-    hold on;
-    % plot(x(i), y(i), 'ro', 'MarkerSize', 10); % Plot titik posisi saat ini sebagai lingkaran merah
-    % Tampilkan gambar drone sebagai simbol titik posisi saat ini
-    h = image(x(i), y(i), drone_icon, 'XData', [x(i)-icon_size/2 x(i)+icon_size/2], 'YData', [y(i)-icon_size/2 y(i)+icon_size/2]);
-    % Atur AlphaData untuk menetapkan transparansi
-    set(h, 'AlphaData', alpha);
-    hold off;
-    pause(0.01); % Jeda antara setiap frame animasi
+
+    xlabel('Time');
+    ylabel('Position (x)');
+
+    % Loop untuk animasi
+    for i = 1:length(t)
+        figure(2);
+        plot(x(1:i), y(1:i), 'b', 'LineWidth', 2); % Plot data yang sudah diperbarui
+        axis([0 400 0 500]); % Sesuaikan batas sumbu x dan y sesuai kebutuhan
+        grid on;
+        hold on;
+        % plot(x(i), y(i), 'ro', 'MarkerSize', 10); % Plot titik posisi saat ini sebagai lingkaran merah
+        % Tampilkan gambar drone sebagai simbol titik posisi saat ini
+        h = image(x(i), y(i), drone_icon, 'XData', [x(i)-icon_size/2 x(i)+icon_size/2], 'YData', [y(i)-icon_size/2 y(i)+icon_size/2]);
+        % Atur AlphaData untuk menetapkan transparansi
+        set(h, 'AlphaData', alpha);
+        hold off;
+        pause(0.01); % Jeda antara setiap frame animasi
+    end
 end
 
 % Definisi fungsi dalam script
 function y = sistemX(arah, kec, t)
+    kec = abs(kec);
     if arah == "maju"
         if kec ~= 0
             gainMaju = 937.34 * kec + 0.8953;
@@ -120,7 +127,7 @@ function y = sistemX(arah, kec, t)
         end
         tauMaju = 1.2396;
         s = tf('s'); % Definisikan operator Laplace
-        Gmaju = gainMaju / (tauMaju * s + 1); % Fungsi transfer sistem
+        Gmaju = exp(-1*0*s)*gainMaju / (tauMaju * s + 1); % Fungsi transfer sistem
         U = 1 / s^2; % Fungsi transfer sinyal ramp
         Ymaju = Gmaju * U; % Fungsi transfer output
         Ystep = s * Gmaju * U;
@@ -130,22 +137,19 @@ function y = sistemX(arah, kec, t)
 
     elseif arah == "mundur"
         if kec ~= 0
-            gainMundur = -1*(1242.79 * kec - 4.531);
+            gainMundur = 1242.79 * kec - 4.531;
         elseif kec == 0
             gainMundur = 0;
         end
         
         tauMundur = 1.949;
         s = tf('s'); % Definisikan operator Laplace
-        Gmundur = gainMundur / (tauMundur * s + 1); % Fungsi transfer sistem
+        Gmundur = exp(-1*0*s)*gainMundur / (tauMundur * s + 1); % Fungsi transfer sistem
         U = 1 / s^2; % Fungsi transfer sinyal ramp
         Ymundur = Gmundur * U; % Fungsi transfer output
         Ystep = s * Gmundur * U;
         % Simulasi dan Plot Respon
         outsim = step(Ystep, t); % Hitung respon terhadap sinyal ramp
-        y = outsim(end);
+        y = -1*outsim(end);
     end
 end
-
-
-

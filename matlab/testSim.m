@@ -1,7 +1,8 @@
 % 
 % Definisikan Parameter Sistem
-kec = 0;
-K = -1*(1242.79 * kec - 4.531);
+kec = 0.5;
+% K = -1*(1242.79 * kec - 4.531);
+K = (1242.79 * kec);
 tau = 1.949;
 A = 1; % Kemiringan sinyal ramp
 
@@ -18,8 +19,8 @@ Ystep = s * G * U;
 figure();
 
 % Delay dan batas xlim
-td = 0;
-tz = 5;
+td = 1;
+tz = 8;
 t2 = 0:0.01:td; % Rentang waktu simulasi
 y2 =[];
 for i = 1:length(t2)
@@ -27,8 +28,8 @@ for i = 1:length(t2)
 end
 
 % Simulasi dan Plot Respon
-t = 0:0.01:tz; % Rentang waktu simulasi
-y = step(Ystep, t+td); % Hitung respon terhadap sinyal ramp
+t = td+0.01:0.01:tz; % Rentang waktu simulasi
+y = step(Ystep, t-td); % Hitung respon terhadap sinyal ramp
 
 % Plot hasil simulasi
 t4 = [t2,t];
@@ -43,6 +44,11 @@ title('Respon Sistem Orde 1 terhadap Sinyal Ramp');
 xlabel('Waktu (detik)');
 ylabel('Output y(t)');
 grid on;
+hold on;
+
+YstepDelay = (exp(-1*td*s))*s * G * U
+ydelay = step(YstepDelay, tfinal.');
+plot(tfinal,ydelay);
 % % pidTuner(sys)
 
 % % Definisikan parameter sistem
