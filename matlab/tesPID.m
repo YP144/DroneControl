@@ -17,9 +17,9 @@ dt = 0.01;  % Interval waktu
 t = 0:dt:tz;
 
 % Parameter PID
-Kp = 10;   % Gain proporsional
-Ki = 0;   % Gain integral
-Kd = 1; % Gain derivatif
+Kp = 1.3614;   % Gain proporsional
+Ki = 0.0256;   % Gain integral
+Kd = 1.5464; % Gain derivatif
 
 % Inisialisasi variabel
 animasi = false;

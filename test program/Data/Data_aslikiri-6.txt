@@ -1,0 +1,1 @@
+Waktu X_movAvg Y_movAvg V_forward V_backward V_left V_right
